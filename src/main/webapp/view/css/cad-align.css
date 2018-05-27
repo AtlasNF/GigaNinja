@@ -1,0 +1,17 @@
+@CHARSET "ISO-8859-1";
+
+.alinhaCad {
+	font-size: 15px;
+	margin-right: 5px;
+	margin-left: 5px;
+	margin-botton: 5px;
+	padding-top:  5px
+	
+}
+.alinhaCadTitle {
+	font-size: 18px;
+	margin-right: 5px;
+	margin-left: 5px;
+	margin-botton: 5px;
+	padding-top:  5px
+}

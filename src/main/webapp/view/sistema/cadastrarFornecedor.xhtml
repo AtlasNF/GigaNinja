@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<head>
+<meta charset="UTF-8" />
+
+</head>
+
+<ui:composition template="/view/template/dashSistema.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="cad" enctype="multipart/form-data">
+			<p:panel id="novoProduto" header="Novo Fornecedor"
+				style="margin-bottom:20px">
+				<h:panelGrid cellpadding="10">
+					<p:messages autoUpdate="true" showDetail="true" id="msg" />
+					<p:outputLabel for="txtNomeFor" value="Nome: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtNomeFor" size="70"
+						value="#{fornecedorBean.nome}"></p:inputText>
+					<p:outputLabel for="txtDescFor" value="Descrição: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputTextarea id="txtDescFor" size="1000"
+						value="#{fornecedorBean.descricao}"></p:inputTextarea>
+					<p:outputLabel for="txtCityFor" value="Cidade:"></p:outputLabel>
+					<p:inputText id="txtCityFor" size="70"
+						value="#{fornecedorBean.cidade}"></p:inputText>
+					<p:outputLabel for="txtEndFor" value="Endereço:"></p:outputLabel>
+					<p:inputText id="txtEndFor" size="70"
+						value="#{fornecedorBean.endereco}"></p:inputText>
+					<p:outputLabel for="txtBairroFor" value="Bairro:"></p:outputLabel>
+					<p:inputText id="txtBairroFor" size="70"
+						value="#{fornecedorBean.bairro}"></p:inputText>
+					<p:outputLabel for="txtNumFor" value="Número:"></p:outputLabel>
+					<p:inputText id="txtNumFor" size="70"
+						value="#{fornecedorBean.numero}"></p:inputText>
+					<hr />
+					<p:outputLabel for="txtdddNum" value="DDD"></p:outputLabel>
+					<p:inputText id="txtdddNum" size="2" value="#{fornecedorBean.ddd}" >
+					<p:ajax event="blur" process="@this" /></p:inputText>
+					<p:outputLabel for="txtnumTEL" value="Número Telefone:"></p:outputLabel>
+					<p:inputText id="txtnumTEL" size="10"
+						value="#{fornecedorBean.numeroTEL}" >
+						<p:ajax event="blur" process="@this" /></p:inputText>
+					<p:outputLabel for="txtrefTEL" value="Referência:"></p:outputLabel>
+					<p:inputText id="txtrefTEL" size="70"
+						value="#{fornecedorBean.referenciaTEL}">
+						<p:ajax event="blur" process="@this" /></p:inputText>
+					<br />
+					<p:commandButton action="#{fornecedorBean.addTelefone}"
+						update="listaTelefones txtdddNum txtnumTEL txtrefTEL" value="Adicionar"
+						process="@this" />
+					<p:dataTable value="#{fornecedorBean.telefones}"
+						var="tel" id="listaTelefones" scrollable="true" scrollHeight="60">
+						<p:column>
+							<p:commandLink title="Excluir" styleClass="fa fa-fw fa-remove"
+								id="btnRemoveTel" actionListener="#{fornecedorBean.removerTelefone}"
+								process="@this" update="listaTelefones">
+								<f:setPropertyActionListener value="#{tel}"
+									target="#{fornecedorBean.selTelefone}" for="btnRemoveTel"
+									update="listaTelefones" />
+							</p:commandLink>
+
+							<h:outputText value="#{tel.ddd} + #{tel.numero}" />
+						</p:column>
+					</p:dataTable>
+					<hr/>
+					<br/>
+					<p:outputLabel for="txtEmail" value="Email:"></p:outputLabel>
+					<p:inputText id="txtEmail" size="70"
+						value="#{fornecedorBean.email.email}" >
+						<p:ajax event="blur" process="@this" /></p:inputText>
+					<p:outputLabel for="txtrefEmail" value="Referência:"></p:outputLabel>
+					<p:inputText id="txtrefEmail" size="70"
+						value="#{fornecedorBean.email.referencia}">
+						<p:ajax event="blur" process="@this" /></p:inputText>
+					<br/>
+					<p:commandButton action="#{fornecedorBean.addEmail}"
+						update="listaEmail txtEmail txtrefEmail" value="Adicionar"
+						process="@this" />
+						<p:dataTable value="#{fornecedorBean.emails}"
+						var="mail" id="listaEmail" scrollable="true" scrollHeight="60">
+						<p:column>
+							<p:commandLink title="Excluir" styleClass="fa fa-fw fa-remove"
+								id="btnRemoveEmail" actionListener="#{fornecedorBean.removerEmail}"
+								process="@this" update="listaEmail">
+								<f:setPropertyActionListener value="#{mail}"
+									target="#{fornecedorBean.selTelefone}" for="btnRemoveEmail"
+									update="listaEmail" />
+							</p:commandLink>
+
+							<h:outputText value="#{mail}" />
+						</p:column>
+					</p:dataTable>
+						<hr/>
+					<p:commandButton type="submit" id="btnEnviar" value="Cadastrar"
+						actionListener="#{fornecedorBean.cadastrarForncedor}" style="text-align: center" update="msg, cad" />
+
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+

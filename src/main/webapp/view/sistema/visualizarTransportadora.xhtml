@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<head>
+<meta charset="UTF-8" />
+
+</head>
+
+<ui:composition template="/view/template/dashSistema.xhtml">
+
+	<ui:define name="body">
+		<h:form id="formTransportadoras" nctype="multipart/form-data">
+			<p:growl id="msg" showDetail="true"></p:growl>
+			<p:panelGrid>
+				<p:dataTable id="transportadorasDT" var="trans"
+					value="#{transportadoraBean.allTransportadoras}"
+					resizableColumns="true">
+					<f:facet name="header">
+           				Transportadoras
+       				 </f:facet>
+					<p:column headerText="Id" style="width:15%;">
+						<h:outputText value="#{trans.id}" />
+					</p:column>
+					<p:column headerText="Nome" style="width:83%;">
+						<h:outputText value="#{trans.nome}" />
+					</p:column>
+					<p:column style="width:32px;text-align: center">
+						<p:commandButton update=":formDialog:transportadoraDialog"
+							process="@this" oncomplete="PF('transportadoraDialog').show()"
+							icon="ui-icon-search" title="View">
+							<f:setPropertyActionListener value="#{trans}"
+								target="#{transportadoraBean.selTransportadora}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+			</p:panelGrid>
+		</h:form>
+
+		<h:form id="formDialog">
+			<p:dialog header="Transportadora Info" widgetVar="transportadoraDialog"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+				height="400">
+
+				<p:panel id="transportadoraDialog" header="Nova Transportadora"
+					style="margin-bottom:20px">
+					<h:panelGrid cellpadding="10">
+						<p:messages showDetail="true" id="msg" />
+						
+						<p:outputLabel for="txtNomeTransportadora" value="Nome: "
+							style="margin-right: 5px"></p:outputLabel>
+						<p:inputText id="txtNomeTransportadora" size="70"
+							value="#{transportadoraBean.selTransportadora.nome}"></p:inputText>
+
+						<hr />
+						<p:outputLabel value="Comandos"></p:outputLabel>
+						<p:column>
+							<p:commandButton type="submit" id="btnSalvar" value="Salvar"
+								actionListener="#{transportadoraBean.editarTransportadora}"
+								style="text-align: center"
+								update=":formTransportadoras :formTransportadoras:msg" />
+							<p:commandButton type="submit" id="btnDeletar" value="Deletar"
+								actionListener="#{transportadoraBean.deletarTransportadora}"
+								style="text-align: center"
+								update=":formTransportadoras :formTransportadoras:msg :formTransportadoras:transportadorasDT" />
+
+						</p:column>
+					</h:panelGrid>
+				</p:panel>
+				</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

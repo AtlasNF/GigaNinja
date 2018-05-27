@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<head>
+<meta charset="UTF-8" />
+
+</head>
+
+<ui:composition template="/view/template/dashSistema.xhtml">
+
+	<ui:define name="body">
+		<h:form id="formProdutos" nctype="multipart/form-data">
+			<p:growl id="msg" showDetail="true"></p:growl>
+
+			<p:commandButton
+				id="btnRemoveTel" actionListener="#{pedidoVisualizarBean.deletePedido}"
+			 update="formProdutos pedidosDT msg" value="Delete" icon="ui-icon-close">
+				</p:commandButton>
+					
+				<p:dataTable id="pedidosDT" var="ped"
+					value="#{pedidoVisualizarBean.pedidos}" resizableColumns="true"
+					selectionMode="single"
+					selection="#{pedidoVisualizarBean.selPedido}" rowKey="#{ped.id}"
+					resizeMode="expand">
+					<f:facet name="header">
+           				Pedidos
+       				 </f:facet>
+					<p:ajax event="rowSelect"
+						listener="#{pedidoVisualizarBean.rowSelect}"
+						update=":formProdutos:msg" />
+
+					<p:column headerText="Id">
+						<h:outputText value="#{ped.id}" />
+					</p:column>
+					<p:column headerText="Data e Hora:" style="width:15%;">
+						<h:outputText value="#{ped.datahora}" />
+					</p:column>
+					<p:column headerText="Nota Fiscal" style="width:10%;">
+						<h:outputText value="#{ped.notafiscal}" />
+					</p:column>
+					<p:column headerText="Valor do Frete" style="width:15%;">
+						<h:outputText value="#{ped.valorfrete}" />
+					</p:column>
+					<p:column headerText="Desconto" style="width:10%;">
+						<h:outputText value="#{ped.desconto}" />
+					</p:column>
+					<p:column headerText="Valor Total" style="width:10%;">
+						<h:outputText value="#{ped.desconto}" />
+					</p:column>
+					<p:column headerText="Transportadora" style="width:15%;">
+						<h:outputText value="#{ped.transportadora.nome}" />
+					</p:column>
+					<p:column headerText="Itens" style="width:80%;">
+						<p:dataList value="#{ped.itens}" var="item" type="ordered"
+							itemType="none" paginator="true" rows="2" styleClass="paginated">
+							<h:outputText
+								value="Nome: #{item.produto.nome}; Qtd: #{item.quantidade}; Valor: #{item.valor};
+                                           Fornecedor: #{item.produto.fornecedor.nome}" />
+						</p:dataList>
+					</p:column>
+				</p:dataTable>
+				<br />
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>
+</html>

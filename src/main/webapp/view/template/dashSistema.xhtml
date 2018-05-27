@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:b="http://bootsfaces.net/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Giga Ninja</title>
+	<link rel="stylesheet" href="../css/dash.css" />
+	<meta charset="UTF-8" />
+
+</h:head>
+<h:body style="padding-top: 60px">
+	<h:outputScript library="holder" name="holder.js" />
+	<h:form>
+		<b:navBar brand="GigaNinja" fixed="top" fluid="true">
+		</b:navBar>
+	</h:form>
+	<b:container fluid="true">
+		<b:row>
+			<b:column col-sm="3" col-md="2" styleClass="sidebar">
+				<b:listLinks>
+					<b:navLink header="Fornecedor" style="color: black" />
+					<b:navLink
+						href="/giganinja/view/sistema/visualizarFornecedores.xhtml"
+						value="Visualizar" />
+					<b:navLink href="/giganinja/view/sistema/cadastrarFornecedor.xhtml"
+						value="Adicionar" />
+				</b:listLinks>
+				<b:listLinks>
+					<b:navLink header="Produto" style="color: black" />
+					<b:navLink href="/giganinja/view/sistema/visualizarProdutos.xhtml" value="Visualizar" />
+					<b:navLink href="/giganinja/view/sistema/cadastrarProduto.xhtml"
+						value="Adicionar" />
+				</b:listLinks>
+
+				<b:listLinks>
+					<b:navLink header="Pedido" style="color: black" />
+					<b:navLink href="/giganinja/view/sistema/visualizarPedido.xhtml" value="Visualizar" />
+					<b:navLink href="/giganinja/view/sistema/cadastrarPedido.xhtml"
+						value="Adicionar" />
+				</b:listLinks>
+				<b:listLinks>
+					<b:navLink header="Transportadora" style="color: black" />
+					<b:navLink href="/giganinja/view/sistema/visualizarTransportadora.xhtml" value="Visualizar" />
+					<b:navLink href="/giganinja/view/sistema/cadastrarTransportadora.xhtml"
+						value="Adicionar" />
+				</b:listLinks>
+			</b:column>
+			<b:column col-sm="9" offset-sm="3" col-md="10" offset="2"
+				styleClass="main">
+				<ui:insert name="body" style="padding-top: 60px">
+				</ui:insert>
+			</b:column>
+		</b:row>
+	</b:container>
+</h:body>
+</html>

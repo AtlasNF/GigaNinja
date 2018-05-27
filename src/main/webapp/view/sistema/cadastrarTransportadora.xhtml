@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<head>
+<meta charset="UTF-8" />
+
+</head>
+
+<ui:composition template="/view/template/dashSistema.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="cad" enctype="multipart/form-data">	
+			<p:panel id="novoProduto" header="Nova Transportadora"
+				style="margin-bottom:20px">
+				<h:panelGrid cellpadding="10">
+					<p:messages showDetail="true" id="msg" />
+					<p:outputLabel for="txtNomeTransportadora" value="Nome: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtNomeTransportadora" size="70"
+						value="#{transportadoraBean.transportadora.nome}"></p:inputText>
+
+					<hr />
+					<p:commandButton type="submit" id="btnEnviar" value="Cadastrar"
+						actionListener="#{transportadoraBean.adicionarTransportadora}"
+						style="text-align: center" update="msg cad"/>
+
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+

@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<head>
+<meta charset="UTF-8" />
+
+</head>
+
+<ui:composition template="/view/template/dashSistema.xhtml">
+
+	<ui:define name="body">
+		<h:form id="formProdutos" nctype="multipart/form-data">
+		<p:growl id="msg" showDetail="true"></p:growl>
+			<p:panelGrid>
+				<p:dataTable id="produtosDT" var="prod"
+					value="#{produtoBean.allProdutos}" resizableColumns="true">
+					<f:facet name="header">
+           				Produtos
+       				 </f:facet>
+					<p:column headerText="Id" style="width:15%;">
+						<h:outputText value="#{prod.id}" />
+					</p:column>
+					<p:column headerText="Nome" style="width:15%;">
+						<h:outputText value="#{prod.nome}" />
+					</p:column>
+					<p:column headerText="Descrição" style="width:30%;">
+						<h:outputText value="#{prod.descricao}" />
+					</p:column>
+					<p:column headerText="Fornecedor" style="width:60%;">
+						<h:outputText value="#{prod.fornecedor.nome}" />
+					</p:column>
+					<p:column style="width:32px;text-align: center">
+						<p:commandButton update=":formDialog:produtoDialog"
+							process="@this" oncomplete="PF('produtoDialog').show()"
+							icon="ui-icon-search" title="View">
+							<f:setPropertyActionListener value="#{prod}"
+								target="#{produtoBean.selectedProduto}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+			</p:panelGrid>
+		</h:form>
+
+		<h:form id="formDialog">
+			
+			<p:scrollPanel mode="height">
+				<p:dialog header="Produto Info" widgetVar="produtoDialog"
+					modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+					height="400">
+					<p:panelGrid columns="2" id="produtoDialog">
+						<h:panelGrid cellpadding="10">
+							<p:messages showDetail="true" id="msg" />
+							<p:outputLabel for="txtNomeProduto" value="Nome: "
+								style="margin-right: 5px"></p:outputLabel>
+							<p:inputText id="txtNomeProduto" size="70"
+								value="#{produtoBean.selectedProduto.nome}"></p:inputText>
+							<p:outputLabel for="txtDescProduto" value="Descrição: "
+								style="margin-right: 5px"></p:outputLabel>
+							<p:inputTextarea id="txtDescProduto" size="1000"
+								value="#{produtoBean.selectedProduto.descricao}"></p:inputTextarea>
+							<hr />
+
+							<p:outputLabel id="txtFornecedor" value="Fornecedor: #{produtoBean.selectedProduto.fornecedor.nome}"></p:outputLabel>
+							<p:commandButton process="@this"
+								oncomplete="PF('fornecedoresDialog').show()"
+								icon="ui-icon-search" title="View">
+							</p:commandButton>
+
+							<p:outputLabel value="Comandos"></p:outputLabel>
+							<p:column>
+								<p:commandButton type="submit" id="btnSalvar" value="Salvar" 
+									actionListener="#{produtoBean.editarProduto}"
+									style="text-align: center" update="formProdutos :formProdutos:msg" />
+								<p:commandButton type="submit" id="btnDeletar" value="Deletar"
+									actionListener="#{produtoBean.deletarProduto}"
+									style="text-align: center" update="formProdutos :formProdutos:msg :formProdutos:produtosDT"  />
+
+							</p:column>
+						</h:panelGrid>
+					</p:panelGrid>
+				</p:dialog>
+
+				<h:form id="formFornecedores">
+					<p:dialog widgetVar="fornecedoresDialog" header="Fornecedores"
+						modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+						height="400">
+						<p:panelGrid id="fornecedoresDialog">
+							<p:dataTable var="forne" value="#{produtoBean.fornecedores}"
+								id="fornecedoresTable" emptyMessage="Fornecedor não encontrado!"
+								filteredValue="#{produtoBean.filteredFornecedores}" rows="10"
+								paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15">
+								<f:facet name="header">
+									<p:outputPanel>
+										<h:outputText value="Search all fields:" />
+										<p:inputText id="globalFilter"
+											onkeyup="PF('fornecedoresTable').filter()"
+											placeholder="Enter keyword" />
+									</p:outputPanel>
+								</f:facet>
+								<p:column headerText="Id" style="width:15%">
+									<h:outputText value="#{forne.id}" />
+								</p:column>
+
+								<p:column headerText="Nome:" style="width:15%">
+									<h:outputText value="#{forne.nome}" />
+								</p:column>
+
+								<p:column headerText="Descrição: " style="width:75%;">
+									<h:outputText value="#{forne.descricao}" />
+								</p:column>
+								<p:column style="width:32px">
+									<p:commandButton title="selecionar" icon="ui-icon-search"
+										id="btnSelFornecedor" update=":formDialog:txtFornecedor :formProdutos:msg"
+										actionListener="#{produtoBean.selecionarFornecedor}">
+										<f:setPropertyActionListener value="#{forne}"
+											target="#{produtoBean.selectedProduto.fornecedor}"
+											for="btnSelFornecedor"  />
+									</p:commandButton>
+								</p:column>
+							</p:dataTable>
+						</p:panelGrid>
+					</p:dialog>
+				</h:form>
+			</p:scrollPanel>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>

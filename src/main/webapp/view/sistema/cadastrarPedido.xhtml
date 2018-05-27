@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<head>
+<meta charset="UTF-8" />
+
+</head>
+
+<ui:composition template="/view/template/dashSistema.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="cad" enctype="multipart/form-data">
+			<p:panel id="novoPedido" header="Novo Pedido"
+				style="margin-bottom:20px">
+				<h:panelGrid cellpadding="10">
+					<p:messages showDetail="true" id="msg" />
+					<p:outputLabel for="txtNotaFiscal" value="Nota Fiscal: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtNotaFiscal" size="70"
+						value="#{pedidoCadastroBean.pedido.notafiscal}"></p:inputText>
+					<p:outputLabel for="txtValorFrete" value="Valor do Frete: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtValorFrete" size="70"
+						value="#{pedidoCadastroBean.pedido.valorfrete}"></p:inputText>
+					<p:outputLabel for="txtDesconto" value="Desconto: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtDesconto" size="70"
+						value="#{pedidoCadastroBean.pedido.desconto}"></p:inputText>
+					<p:outputLabel for="txtValorTotal" value="Valor Total: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtValorTotal" size="70"
+						value="#{pedidoCadastroBean.pedido.valortotal}"></p:inputText>
+					<hr />
+
+					<p:outputLabel id="txtTransportadora"
+						value="Fornecedor:  #{pedidoCadastroBean.pedido.transportadora.nome}"></p:outputLabel>
+					<p:commandButton process="@this"
+						oncomplete="PF('transportadoraDialog').show()"
+						icon="ui-icon-search" title="View">
+					</p:commandButton>
+
+					<hr />
+					<p:outputLabel id="txtItens" value="Adicionar Item:"></p:outputLabel>
+					<p:commandButton process="@this" update=":formItem"
+						oncomplete="PF('itemDialog').show()" icon="ui-icon-search"
+						title="View">
+					</p:commandButton>
+
+					<p:dataTable id="itensDT" var="item"
+						value="#{pedidoCadastroBean.pedido.itens}" rowKey="#{item.valor}"
+						selectionMode="single" selection="#{pedidoCadastroBean.selItem}">
+						<f:facet name="header">
+						</f:facet>
+						<p:column headerText="Fornecedor">
+							<h:outputText value="#{item.produto.fornecedor.nome}" />
+						</p:column>
+						<p:column headerText="Nome">
+							<h:outputText value="#{item.produto.nome}" />
+						</p:column>
+						<p:column headerText="Qtd.">
+							<h:outputText value="#{item.quantidade}" />
+						</p:column>
+						<p:column headerText="Valor">
+							<h:outputText value="#{item.valor}" />
+						</p:column>
+					</p:dataTable>
+
+					<p:contextMenu for="itensDT">
+						<p:menuitem value="Delete" update="itensDT" icon="ui-icon-close"
+							actionListener="#{pedidoCadastroBean.deleteItem}" />
+					</p:contextMenu>
+
+					<hr />
+					<p:commandButton type="submit" id="btnEnviar" value="Cadastrar"
+						actionListener="#{pedidoCadastroBean.adicionarPedido}"
+						style="text-align: center" update=":cad:msg cad" />
+
+				</h:panelGrid>
+			</p:panel>
+		</h:form>
+		<h:form id="formFornecedores">
+			<p:dialog widgetVar="transportadoraDialog" header="Transportadoras"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false"
+				height="400">
+				<p:panelGrid id="transportadoraDialog">
+					<p:dataTable var="trans"
+						value="#{pedidoCadastroBean.transportadoras}"
+						id="transportadoraTable"
+						emptyMessage="Transportadora não encontrado!"
+						filteredValue="#{pedidoCadastroBean.filtedTransportadoras}"
+						rows="10" paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+						<f:facet name="header">
+							<p:outputPanel>
+								<h:outputText value="Search all fields:" />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('transportadoraTable').filter()"
+									placeholder="Enter keyword" />
+							</p:outputPanel>
+						</f:facet>
+						<p:column headerText="Id" style="width:15%">
+							<h:outputText value="#{trans.id}" />
+						</p:column>
+
+						<p:column headerText="Nome:" style="width:83%">
+							<h:outputText value="#{trans.nome}" />
+						</p:column>
+						<p:column style="width:32px">
+							<p:commandButton title="selecionar" icon="ui-icon-search"
+								id="btnSelTranportadora" update=":cad:txtTransportadora :cad:msg"
+								actionListener="#{pedidoCadastroBean.selecionarTransportadora}">
+								<f:setPropertyActionListener value="#{trans}"
+									target="#{pedidoCadastroBean.pedido.transportadora}"
+									for="btnSelTransportadora" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panelGrid>
+			</p:dialog>
+		</h:form>
+		<h:form id="formItem">
+			<p:dialog widgetVar="itemDialog" modal="true" showEffect="fade"
+				hideEffect="fade" resizable="false" height="400" header="Item">
+				<p:panelGrid id="itemDialog">
+					<p:outputLabel for="txtItemQuantidade" value="Quantidade: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtItemQuantidade" size="70"
+						value="#{pedidoCadastroBean.item.quantidade}"></p:inputText>
+					<br />
+					<br />
+					<p:outputLabel for="txtItemValor" value="Valor: "
+						style="margin-right: 5px"></p:outputLabel>
+					<p:inputText id="txtItemValor" size="70"
+						value="#{pedidoCadastroBean.item.valor}"></p:inputText>
+					<br />
+					<br />
+					<p:outputLabel id="txtItemProduto"
+						value="Produto:  #{pedidoCadastroBean.item.produto.nome}"></p:outputLabel>
+					<br />
+					<p:commandButton process="@this"
+						oncomplete="PF('produtoDialog').show()" icon="ui-icon-search"
+						title="View">
+					</p:commandButton>
+					<hr />
+					<p:commandButton value="Salvar"
+						actionListener="#{pedidoCadastroBean.addItem}"
+						update=":cad:itensDT :cad:msg" />
+				</p:panelGrid>
+
+			</p:dialog>
+		</h:form>
+
+
+		<h:form id="formProduto">
+			<p:dialog widgetVar="produtoDialog" header="Produtos" modal="true"
+				showEffect="fade" hideEffect="fade" resizable="false" height="400">
+				<p:panelGrid id="produtoDialog">
+					<p:dataTable var="prod" value="#{pedidoCadastroBean.produtos}"
+						id="produtosTable" emptyMessage="Produtos não encontrado!"
+						filteredValue="#{pedidoCadastroBean.filtedProdutos}" rows="10"
+						paginator="true"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="5,10,15">
+						<f:facet name="header">
+							<p:outputPanel>
+								<h:outputText value="Search all fields:" />
+								<p:inputText id="globalFilter"
+									onkeyup="PF('produtosTable').filter()"
+									placeholder="Enter keyword" />
+							</p:outputPanel>
+						</f:facet>
+						<p:column headerText="Id" style="width:15%">
+							<h:outputText value="#{prod.id}" />
+						</p:column>
+
+						<p:column headerText="Nome:" style="width:30%">
+							<h:outputText value="#{prod.nome}" />
+						</p:column>
+						<p:column headerText="Descrição:" style="width:15%">
+							<h:outputText value="#{prod.descricao}" />
+						</p:column>
+						<p:column headerText="Fornecedor:" style="width:50%">
+							<h:outputText value="#{prod.fornecedor.nome}" />
+						</p:column>
+						<p:column style="width:32px">
+							<p:commandButton title="selecionar" icon="ui-icon-search"
+								id="btnSelProduto" update=":formItem:txtItemProduto :cad:msg"
+								actionListener="#{pedidoCadastroBean.selecionarProduto}">
+								<f:setPropertyActionListener value="#{prod}"
+									target="#{pedidoCadastroBean.item.produto}"
+									for="btnSelProduto" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panelGrid>
+			</p:dialog>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+
